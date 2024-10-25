@@ -5,7 +5,7 @@ import { useGetUserDataQuery } from "../features/apiSlice";
 import MerchantSidebar from "./Sidebar/MerchantSidebar";
 import FarmerSidebar from "./Sidebar/FarmerSidebar";
 import Cookies from "js-cookie";
-import useNavigate from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ContractModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
@@ -45,8 +45,8 @@ const BoughtCrops = () => {
   const navigate = useNavigate();
   const { data: userData, isLoadingData, isError } = useGetUserDataQuery();
   const { data: crops = [], error, isLoading } = useFetchCropsQuery();
-  const [isModalOpen, setIsModalOpen] = useState(false); // Manage modal state
-  const [selectedCrop, setSelectedCrop] = useState(null); // Store selected crop
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCrop, setSelectedCrop] = useState(null);
 
   const userType = Cookies.get("user_type");
 

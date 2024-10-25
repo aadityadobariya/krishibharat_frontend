@@ -35,7 +35,7 @@ const WalletComponent = () => {
       .refine((val) => !isNaN(val) && val.trim() !== "", {
         message: "Amount is required",
       })
-      .transform((val) => parseFloat(val)) // Transform string to number
+      .transform((val) => parseFloat(val))
       .refine((val) => val > 0, {
         message: "Amount must be greater than 0",
       }),
@@ -73,7 +73,6 @@ const WalletComponent = () => {
           newTransaction,
         ]);
         setWalletBalance((prevBalance) => prevBalance + data.amount);
-        // Reset form values
         reset();
       },
       prefill: {
@@ -223,5 +222,3 @@ const WalletComponent = () => {
 };
 
 export default WalletComponent;
-
-// key: "rzp_test_xQsftNSOJZ1Igi",
