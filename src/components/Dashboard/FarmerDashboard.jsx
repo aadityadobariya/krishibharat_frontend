@@ -11,8 +11,7 @@ import {
 import { Bar } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
 import { useGetUserDataQuery } from "../../features/apiSlice.js";
-import CropManagement from "../CropManagement.jsx";
-import Sidebar from "../Sidebar/Sidebar.jsx";
+import FarmerSidebar from "../Sidebar/FarmerSidebar.jsx";
 
 ChartJS.register(
   CategoryScale,
@@ -20,7 +19,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const FarmerDashboard = () => {
@@ -60,19 +59,19 @@ const FarmerDashboard = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar />
+      <FarmerSidebar />
       <div className="flex-1 flex flex-col">
-        <header className="bg-white shadow-md z-10 sticky top-0">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-gray-800">
+        <header className="bg-white shadow-md z-10 sticky top-0 w-full">
+          <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 className="text-lg sm:text-3xl font-bold text-gray-800">
               {isLoading
                 ? "Loading..."
                 : isError
-                ? "Error loading user data."
-                : `Welcome, ${
-                    userData.fname.charAt(0).toUpperCase() +
-                    userData.fname.slice(1)
-                  }`}
+                  ? "Error loading user data."
+                  : `Welcome, ${
+                      userData.fname.charAt(0).toUpperCase() +
+                      userData.fname.slice(1)
+                    }`}
             </h1>
             <div className="flex items-center">
               <div
@@ -83,9 +82,9 @@ const FarmerDashboard = () => {
                 <p className="text-white">Wallet</p>
               </div>
               <img
-                src="https://via.placeholder.com/100x50"
-                alt="profile"
-                className="rounded-full h-12 w-12"
+                src="/profile-circle.svg"
+                alt="Default profile picture"
+                className="w-10 h-8 sm:w-12 sm:h-10"
               />
             </div>
           </div>
@@ -164,8 +163,6 @@ const FarmerDashboard = () => {
               <Bar data={data} options={options} />
             </div>
           </div>
-
-          <CropManagement />
         </main>
       </div>
     </div>

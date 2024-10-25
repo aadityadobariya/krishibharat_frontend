@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import signup from "../../assets/signup.jpg";
 import { useLoginMutation } from "../../features/apiSlice";
-import { setToken } from "../../features/authSlice";
+import { setToken, setUserType } from "../../features/authSlice";
+import Cookies from "js-cookie";
 
 const schema = z.object({
   email: z.string().email("This is not a valid email"),
@@ -31,13 +32,13 @@ function Login() {
       const { token, user_type } = response;
 
       dispatch(setToken(token));
-      console.log(token);
+      dispatch(setUserType(user_type));
 
-      if (user_type === "farmer") {
-        navigate("/farmer-dashboard");
-      } else if (user_type === "merchant") {
-        navigate("/merchant-dashboard");
-      }
+      // Set cookies
+      Cookies.set("token", token);
+      Cookies.set("user_type", user_type);
+
+      navigate("/dashboard");
     } catch (err) {
       console.error("Login failed:", err);
     }

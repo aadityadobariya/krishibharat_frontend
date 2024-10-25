@@ -5,6 +5,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     token: Cookies.get("token") || null,
+    user_type: null, // Initialize user_type
   },
   reducers: {
     setToken(state, action) {
@@ -15,9 +16,14 @@ const authSlice = createSlice({
       state.token = null;
       Cookies.remove("token");
     },
+    setUserType(state, action) {
+      state.user_type = action.payload; // Set user_type in state
+    },
   },
 });
 
-export const { setToken, clearToken } = authSlice.actions;
+// Export the actions
+export const { setToken, clearToken, setUserType } = authSlice.actions;
 
+// Export the reducer
 export default authSlice.reducer;

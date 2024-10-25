@@ -15,8 +15,7 @@ import {
   useFetchCropsQuery,
   useGetUserDataQuery,
 } from "../../features/apiSlice.js";
-import BidComponent from "../BidComponent.jsx";
-import Sidebar from "../Sidebar/Sidebar.jsx";
+import MerchantSidebar from "../Sidebar/MerchantSidebar.jsx";
 
 ChartJS.register(
   CategoryScale,
@@ -24,7 +23,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const ContractModal = ({ isOpen, onClose, onConfirm }) => {
@@ -115,20 +114,20 @@ const MerchantDashboard = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar />
+    <div className="flex h-screen">
+      <MerchantSidebar />
       <div className="flex-1 bg-gray-100 overflow-auto">
-        <header className="bg-white shadow-md z-10 sticky top-0">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-gray-800">
+        <header className="bg-white shadow-md z-10 sticky top-0 w-full">
+          <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 className="text-lg sm:text-3xl font-bold text-gray-800">
               {isLoadingData
                 ? "Loading..."
                 : isError
-                ? "Error loading user data."
-                : `Welcome, ${
-                    userData.fname.charAt(0).toUpperCase() +
-                    userData.fname.slice(1)
-                  }`}
+                  ? "Error loading user data."
+                  : `Welcome, ${
+                      userData.fname.charAt(0).toUpperCase() +
+                      userData.fname.slice(1)
+                    }`}
             </h1>
             <div className="flex items-center">
               <div
@@ -139,9 +138,9 @@ const MerchantDashboard = () => {
                 <p className="text-white">Wallet</p>
               </div>
               <img
-                src="https://via.placeholder.com/100x50"
-                alt="profile"
-                className="rounded-full h-12 w-12"
+                src="/profile-circle.svg"
+                alt="Default profile picture"
+                className="w-10 h-8 sm:w-12 sm:h-10"
               />
             </div>
           </div>
@@ -221,10 +220,6 @@ const MerchantDashboard = () => {
         </div>
 
         <div className="mt-6 p-6">
-          <BidComponent />
-        </div>
-
-        <div className="mt-6 p-6">
           <h2 className="text-2xl font-semibold mb-4">Crops Available</h2>
           <div className="bg-white p-6 rounded-lg shadow-md overflow-auto">
             <table className="min-w-full table-auto divide-y divide-gray-200 border border-gray-300 shadow-lg">
@@ -242,14 +237,11 @@ const MerchantDashboard = () => {
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Sold Price
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Zone
-                  </th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider"></th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {crops.map((crop) => (
+                {crops.slice(0, 5).map((crop) => (
                   <tr key={crop.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {crop.name}
@@ -263,9 +255,6 @@ const MerchantDashboard = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {crop.sold_price}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {crop.zone_id}
-                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         className="bg-[#4a7c59] text-white px-4 py-2 rounded hover:bg-[#3b634a] transition duration-300 ease-in-out"
@@ -278,6 +267,12 @@ const MerchantDashboard = () => {
                 ))}
               </tbody>
             </table>
+            <button
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              onClick={() => navigate("/bought-crops")}
+            >
+              Show More
+            </button>
           </div>
         </div>
 
