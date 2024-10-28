@@ -14,7 +14,7 @@ const BidComponent = () => {
   const [selectedState, setSelectedState] = useState("");
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [selectedCrop, setSelectedCrop] = useState(null);
+  const [selectedCrop, setSelectedCrop] = useState({ id: null, base_price: 0 });
   const [bidAmount, setBidAmount] = useState("");
   const navigate = useNavigate();
 
@@ -71,9 +71,14 @@ const BidComponent = () => {
   };
 
   const openModal = (crop) => {
-    setSelectedCrop(crop);
-    setBidAmount("");
-    setShowModal(true);
+    if (crop && crop.id) {
+      setSelectedCrop(crop);
+      setBidAmount("");
+      setShowModal(true);
+    } else {
+      console.error("Crop does not have an id:", crop);
+      setError("Invalid crop data. Please try again.");
+    }
   };
 
   const closeModal = () => {
@@ -86,7 +91,15 @@ const BidComponent = () => {
   };
 
   const placeBid = () => {
-    if (!selectedCrop) return;
+    console.log("selectedCrop:", selectedCrop.id);
+    if (!selectedCrop || !selectedCrop.id) {
+      console.error(
+        "Error placing bid: 'selectedCrop' or 'selectedCrop.id' is not defined.",
+        selectedCrop,
+      );
+      setError("Please select a crop before placing a bid.");
+      return;
+    }
 
     const bidValue = parseFloat(bidAmount);
     if (isNaN(bidValue) || bidValue <= selectedCrop.base_price) {
@@ -101,8 +114,8 @@ const BidComponent = () => {
         Authorization: `Bearer ${Cookies.get("token")}`,
       },
       body: JSON.stringify({
-        id: selectedCrop.id,
-        buyer_id: 13, // Replace with actual dynamic buyer_id if needed
+        id: selectedCrop.id, // Access after confirming selectedCrop has an id
+        buyer_id: 14, // Replace with actual dynamic buyer_id if needed
         sold_price: bidValue,
       }),
     })
@@ -119,11 +132,13 @@ const BidComponent = () => {
         let data;
         try {
           data = text ? JSON.parse(text) : {};
+          console.log("data:", data);
         } catch (e) {
           console.warn("Response is not valid JSON:", text);
           data = {};
         }
 
+        console.log("selected cropaoeu:", selectedCrop);
         setCrops((prevCrops) =>
           prevCrops.map((crop) =>
             crop.id === selectedCrop.id
@@ -134,7 +149,7 @@ const BidComponent = () => {
         closeModal();
       })
       .catch((error) => {
-        console.error("Error placing bid:", error);
+        console.error("Error placidhnhhng bid: ", error);
         setError(error.message);
       });
   };
@@ -245,6 +260,9 @@ const BidComponent = () => {
                         Minimum Bid
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                        Current Bid Price
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                         Status
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -263,6 +281,9 @@ const BidComponent = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {crop.base_price}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {crop.sold_price ? crop.sold_price : "Not Sold"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {crop.is_sold ? "Sold" : "Available"}

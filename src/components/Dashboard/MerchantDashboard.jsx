@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import {
   useFetchCropsQuery,
   useGetUserDataQuery,
+  useCropsCountQuery,
 } from "../../features/apiSlice.js";
 import MerchantSidebar from "../Sidebar/MerchantSidebar.jsx";
 
@@ -61,11 +62,16 @@ const ContractModal = ({ isOpen, onClose, onConfirm }) => {
 };
 
 const MerchantDashboard = () => {
+  const {
+    data: cropsCountData,
+    isLoading: cropsCountLoading,
+    isError: cropsCountError,
+  } = useCropsCountQuery();
   const { data: userData, isLoadingData, isError } = useGetUserDataQuery();
   const navigate = useNavigate();
   const { data: crops = [], error, isLoading } = useFetchCropsQuery();
-  const [isModalOpen, setIsModalOpen] = useState(false); // Manage modal state
-  const [selectedCrop, setSelectedCrop] = useState(null); // Store selected crop
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCrop, setSelectedCrop] = useState(null);
 
   const handleSignClick = (crop) => {
     setSelectedCrop(crop);
@@ -149,8 +155,16 @@ const MerchantDashboard = () => {
         <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div className="p-6 bg-white rounded-lg shadow-md flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-medium text-[#4a7c59]">Revenue</h3>
-              <p className="text-2xl font-semibold">2,50,000/-</p>
+              <h3 className="text-lg font-medium text-[#4a7c59]">
+                Total Crops
+              </h3>
+              <p className="text-2xl font-semibold">
+                {cropsCountLoading
+                  ? "Loading..."
+                  : cropsCountError
+                    ? "Error loading crops data."
+                    : cropsCountData?.totalCrops || 0}
+              </p>
             </div>
             <div className="bg-[#4a7c59] p-2 rounded-full text-white">
               <i className="fas fa-arrow-right"></i>
@@ -158,17 +172,14 @@ const MerchantDashboard = () => {
           </div>
           <div className="p-6 bg-white rounded-lg shadow-md flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-medium text-[#4a7c59]">Expenses</h3>
-              <p className="text-2xl font-semibold">50,000</p>
-            </div>
-            <div className="bg-[#4a7c59] p-2 rounded-full text-white">
-              <i className="fas fa-arrow-right"></i>
-            </div>
-          </div>
-          <div className="p-6 bg-white rounded-lg shadow-md flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-medium text-[#4a7c59]">Sales</h3>
-              <p className="text-2xl font-semibold">2,00,000/-</p>
+              <h3 className="text-lg font-medium text-[#4a7c59]">Sold Crops</h3>
+              <p className="text-2xl font-semibold">
+                {cropsCountLoading
+                  ? "Loading..."
+                  : cropsCountError
+                    ? "Error loading crops data."
+                    : cropsCountData?.soldCrops || 0}
+              </p>
             </div>
             <div className="bg-[#4a7c59] p-2 rounded-full text-white">
               <i className="fas fa-arrow-right"></i>

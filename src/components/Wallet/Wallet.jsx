@@ -1,7 +1,12 @@
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGetUserDataQuery } from "../../features/apiSlice";
+import {
+  useGetUserDataQuery,
+  useGetWalletBalanceQuery,
+  useTopUpPaymentMutation,
+  useSendOrderIdMutation,
+  usePaymentHistoryQuery,
+} from "../../features/apiSlice";
 import MerchantSidebar from "../Sidebar/MerchantSidebar";
 import FarmerSidebar from "../Sidebar/FarmerSidebar";
 import { z } from "zod";
@@ -10,24 +15,30 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Cookies from "js-cookie";
 
 const WalletComponent = () => {
-  const navigate = useNavigate();
-  const { data: userData, isLoading, isError } = useGetUserDataQuery();
-  const [transactions, setTransactions] = useState([
-    {
-      id: "P112-109945",
-      amount: 3000,
-      date: "22/08/2024, 12:46:03 pm",
-      gateway: "Razorpay",
-    },
-    {
-      id: "P112-109720",
-      amount: 4000,
-      date: "22/08/2024, 12:44:03 pm",
-      gateway: "Razorpay",
-    },
-  ]);
+  const {
+    data: paymentHistoryData,
+    isLoading: paymentHistoryLoading,
+    isError: paymentHistoryError,
+  } = usePaymentHistoryQuery();
 
-  const [walletBalance, setWalletBalance] = useState(4150);
+  const navigate = useNavigate();
+  const [topUpPayment] = useTopUpPaymentMutation();
+  const [sendOrderId] = useSendOrderIdMutation();
+
+  const {
+    data: userData,
+    isLoading: userLoading,
+    isError: userError,
+  } = useGetUserDataQuery();
+
+  const {
+    data: walletData,
+    isLoading: walletLoading,
+    isError: walletError,
+    refetch,
+  } = useGetWalletBalanceQuery();
+
+  const walletBalance = walletData ? Number(walletData) : 0;
 
   const rechargeSchema = z.object({
     amount: z
@@ -36,13 +47,7 @@ const WalletComponent = () => {
         message: "Amount is required",
       })
       .transform((val) => parseFloat(val))
-      .refine((val) => val > 0, {
-        message: "Amount must be greater than 0",
-      }),
-    mobileNumber: z
-      .string()
-      .length(10, "Mobile number must be 10 digits")
-      .regex(/^[0-9]+$/, "Mobile number must be numeric"),
+      .refine((val) => val > 0, { message: "Amount must be greater than 0" }),
   });
 
   const {
@@ -53,40 +58,66 @@ const WalletComponent = () => {
     resolver: zodResolver(rechargeSchema),
   });
 
-  const onSubmit = (data) => {
-    const options = {
-      key: "rzp_test_xQsftNSOJZ1Igi",
-      amount: data.amount * 100,
-      currency: "INR",
-      name: userData?.name,
-      description: "Recharge your wallet",
-      handler: function (response) {
-        console.log("Payment successful:", response);
-        const newTransaction = {
-          id: response.razorpay_payment_id,
-          amount: data.amount,
-          date: new Date().toLocaleString(),
-          gateway: "Razorpay",
-        };
-        setTransactions((prevTransactions) => [
-          ...prevTransactions,
-          newTransaction,
-        ]);
-        setWalletBalance((prevBalance) => prevBalance + data.amount);
-        reset();
-      },
-      prefill: {
-        name: userData?.fname || "",
-        email: userData?.email || "",
-        contact: data.mobileNumber,
-      },
-      theme: {
-        color: "#4a7c59",
-      },
-    };
+  const onSubmit = async (data) => {
+    const token = Cookies.get("token");
+    try {
+      const apiResponse = await topUpPayment(
+        { amount: data.amount * 100 },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      ).unwrap();
 
-    const razorpay = new window.Razorpay(options);
-    razorpay.open();
+      if (apiResponse.order_id) {
+        console.log("Order ID received:", apiResponse.order_id);
+
+        const options = {
+          key: "rzp_test_xQsftNSOJZ1Igi",
+          order_id: apiResponse.order_id,
+          handler: async function (response) {
+            console.log("Payment successful", response);
+
+            try {
+              // Send the order ID to the backend after successful payment
+              await sendOrderId(
+                { order_id: apiResponse.order_id },
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                },
+              ).unwrap();
+              console.log("Order ID sent successfully");
+              refetch();
+
+              await refetch();
+            } catch (sendError) {
+              console.error("Error sending order ID:", sendError);
+            }
+          },
+          prefill: {
+            name: userData?.fname || "",
+            email: userData?.email || "",
+          },
+          theme: {
+            color: "#4a7c59",
+          },
+        };
+
+        const razorpay = new window.Razorpay(options);
+        razorpay.open();
+      }
+    } catch (error) {
+      console.error("Error handling payment:", error);
+      if (error.data) {
+        console.error("Error data:", error.data);
+      }
+      if (error.status) {
+        console.error("Error status:", error.status);
+      }
+    }
   };
 
   const userType = Cookies.get("user_type");
@@ -98,14 +129,11 @@ const WalletComponent = () => {
         <header className="bg-white shadow-md z-10 sticky top-0 w-full">
           <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1 className="text-lg sm:text-3xl font-bold text-gray-800">
-              {isLoading
+              {userLoading
                 ? "Loading..."
-                : isError
+                : userError
                   ? "Error loading user data."
-                  : `Welcome, ${
-                      userData.fname.charAt(0).toUpperCase() +
-                      userData.fname.slice(1)
-                    }`}
+                  : `Welcome, ${userData.fname.charAt(0).toUpperCase() + userData.fname.slice(1)}`}
             </h1>
             <div className="flex items-center">
               <div
@@ -130,7 +158,12 @@ const WalletComponent = () => {
               Wallet Balance:
               <br />
               <span className="font-bold text-2xl mt-2">
-                ₹{walletBalance.toFixed(2)}
+                ₹
+                {walletLoading
+                  ? "Loading..."
+                  : walletError
+                    ? "Error"
+                    : walletBalance.toFixed(2)}
               </span>
             </div>
           </div>
@@ -158,22 +191,6 @@ const WalletComponent = () => {
                 <p className="text-red-500">{errors.amount.message}</p>
               )}
 
-              <Controller
-                name="mobileNumber"
-                control={control}
-                render={({ field }) => (
-                  <input
-                    type="text"
-                    className={`border border-gray-300 px-4 py-2 rounded w-full focus:ring focus:ring-green-300 ${errors.mobileNumber ? "border-red-500" : ""}`}
-                    placeholder="Enter mobile number"
-                    {...field}
-                  />
-                )}
-              />
-              {errors.mobileNumber && (
-                <p className="text-red-500">{errors.mobileNumber.message}</p>
-              )}
-
               <button
                 type="submit"
                 className="bg-[#4a7c59] transition ease-in-out duration-300 hover:bg-green-800 text-white px-6 py-2 rounded"
@@ -184,30 +201,46 @@ const WalletComponent = () => {
           </form>
 
           <div className="mt-6">
-            <h2 className="text-lg font-semibold mb-2">Transaction History</h2>
+            <h2 className="text-lg font-semibold mb-2">Payment History</h2>
             <div className="overflow-x-auto">
               <table className="w-full bg-white shadow-md rounded-lg">
                 <thead>
                   <tr className="bg-gray-200">
-                    <th className="text-left p-4">Transaction ID</th>
+                    <th className="text-left p-4">Order ID</th>
                     <th className="text-left p-4">Amount</th>
-                    <th className="text-left p-4">Payment Date</th>
-                    <th className="text-left p-4">Payment Gateway</th>
+                    <th className="text-left p-4">Payment Status</th>
+                    <th className="text-left p-4">Created At</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {transactions.map((transaction, index) => (
+                  {paymentHistoryData?.map((transaction) => (
                     <tr
-                      key={index}
+                      key={transaction.order_id}
                       className="border-t hover:bg-gray-50 transition"
                     >
-                      <td className="p-4 text-gray-700">{transaction.id}</td>
+                      <td className="p-4 text-gray-700">
+                        {transaction.order_id}
+                      </td>
                       <td className="p-4 text-gray-700">
                         ₹{transaction.amount}
                       </td>
-                      <td className="p-4 text-gray-700">{transaction.date}</td>
                       <td className="p-4 text-gray-700">
-                        {transaction.gateway}
+                        {transaction.status === "success" ? (
+                          <span className="text-white p-2 rounded-full bg-green-600">
+                            Success
+                          </span>
+                        ) : transaction.status === "failed" ? (
+                          <span className="text-white p-2 rounded-full bg-red-600">
+                            Failed
+                          </span>
+                        ) : (
+                          <span className="text-white p-2 rounded-full bg-gray-400">
+                            Pending
+                          </span>
+                        )}
+                      </td>
+                      <td className="p-4 text-gray-700">
+                        {transaction.created_at}
                       </td>
                     </tr>
                   ))}
@@ -222,3 +255,7 @@ const WalletComponent = () => {
 };
 
 export default WalletComponent;
+
+// key: "rzp_test_xQsftNSOJZ1Igi",
+
+// await sendOrderId({ order_id: response.order_id }).unwrap();

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FarmerDashboard from "./FarmerDashboard";
 import MerchantDashboard from "./MerchantDashboard";
-import { setUserType } from "../../features/authSlice"; // Import your action
+import { setUserType } from "../../features/authSlice";
 
 function Dashboard() {
   const dispatch = useDispatch();
@@ -12,7 +12,7 @@ function Dashboard() {
   useEffect(() => {
     const storedUserType = Cookies.get("user_type");
     if (storedUserType) {
-      dispatch(setUserType(storedUserType)); // Set the user type from cookies
+      dispatch(setUserType(storedUserType));
     }
   }, [dispatch]);
 
@@ -21,7 +21,7 @@ function Dashboard() {
   } else if (userType === "merchant") {
     return <MerchantDashboard />;
   } else {
-    return <div>Please log in to access the dashboard.</div>; // Fallback message
+    return <div>Please log in to access the dashboard.</div>;
   }
 }
 

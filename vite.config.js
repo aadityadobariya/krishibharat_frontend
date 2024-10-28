@@ -4,6 +4,7 @@ import path from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  base: "/",
   plugins: [react()],
   server: {
     host: true, // This makes the server listen on all network interfaces

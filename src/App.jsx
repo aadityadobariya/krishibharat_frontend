@@ -7,6 +7,8 @@ import Wallet from "./components/Wallet/Wallet";
 import BidComponent from "./components/BidComponent";
 import BoughtCrops from "./components/BoughtCrops";
 import CropManagement from "./components/CropManagement";
+import Transaction from "./components/Transaction/Transaction";
+import Published from "./components/Published/Published";
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path="/bids" element={<BidComponent />} />
         <Route path="/bought-crops" element={<BoughtCrops />} />
         <Route path="/crops-added" element={<CropManagement />} />
+        <Route path="/published-crops" element={<Published />} />
+        <Route path="/transaction" element={<Transaction />} />
         <Route index path="/" element={<Login />} />
       </Routes>
     </Router>

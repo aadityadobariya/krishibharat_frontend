@@ -11,6 +11,7 @@ import {
 import { Bar } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
 import { useGetUserDataQuery } from "../../features/apiSlice.js";
+import { useCropsCountQuery } from "../../features/apiSlice.js";
 import FarmerSidebar from "../Sidebar/FarmerSidebar.jsx";
 
 ChartJS.register(
@@ -24,6 +25,11 @@ ChartJS.register(
 
 const FarmerDashboard = () => {
   const { data: userData, isLoading, isError } = useGetUserDataQuery();
+  const {
+    data: cropsCountData,
+    isLoading: cropsCountLoading,
+    isError: cropsCountError,
+  } = useCropsCountQuery();
   const navigate = useNavigate();
   const data = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
@@ -94,8 +100,16 @@ const FarmerDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div className="p-6 bg-white rounded-lg shadow-md flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-medium text-[#4a7c59]">Revenue</h3>
-                <p className="text-2xl font-semibold">4,20,000/-</p>
+                <h3 className="text-lg font-medium text-[#4a7c59]">
+                  Total Crops
+                </h3>
+                <p className="text-2xl font-semibold">
+                  {cropsCountLoading
+                    ? "Loading..."
+                    : cropsCountError
+                      ? "Error loading crops data."
+                      : cropsCountData?.totalCrops || 0}
+                </p>
               </div>
               <div className="bg-[#4a7c59] p-2 rounded-full text-white">
                 <i className="fas fa-arrow-right"></i>
@@ -103,17 +117,16 @@ const FarmerDashboard = () => {
             </div>
             <div className="p-6 bg-white rounded-lg shadow-md flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-medium text-[#4a7c59]">Expenses</h3>
-                <p className="text-2xl font-semibold">1,75,000/-</p>
-              </div>
-              <div className="bg-[#4a7c59] p-2 rounded-full text-white">
-                <i className="fas fa-arrow-right"></i>
-              </div>
-            </div>
-            <div className="p-6 bg-white rounded-lg shadow-md flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-medium text-[#4a7c59]">Sales</h3>
-                <p className="text-2xl font-semibold">3,50,000/-</p>
+                <h3 className="text-lg font-medium text-[#4a7c59]">
+                  Sold Crops
+                </h3>
+                <p className="text-2xl font-semibold">
+                  {cropsCountLoading
+                    ? "Loading..."
+                    : cropsCountError
+                      ? "Error loading crops data."
+                      : cropsCountData?.soldCrops || 0}
+                </p>
               </div>
               <div className="bg-[#4a7c59] p-2 rounded-full text-white">
                 <i className="fas fa-arrow-right"></i>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FiBarChart2, FiDollarSign, FiHome, FiMenu } from "react-icons/fi";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from "react-router-dom";
 
 const FarmerSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -61,13 +61,19 @@ const FarmerSidebar = () => {
               to="/crops-added"
               className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
             >
-              <FiBarChart2 className="mr-2" /> All Crops
+              <FiBarChart2 className="mr-2" /> Crops
             </Link>
             <Link
-              to="/wallet"
+              to="/published-crops"
               className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
             >
-              <FiDollarSign className="mr-2" /> Wallet
+              <FiBarChart2 className="mr-2" /> Published Crops
+            </Link>
+            <Link
+              to="/transaction"
+              className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
+            >
+              <FiDollarSign className="mr-2" /> Transaction
             </Link>
           </nav>
         </div>

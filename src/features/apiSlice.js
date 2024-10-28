@@ -60,6 +60,12 @@ export const apiSlice = createApi({
         method: "POST",
       }),
     }),
+    cropsCount: builder.query({
+      query: () => "/crops/counts",
+    }),
+    publishedCrops: builder.query({
+      query: () => "/crops/published",
+    }),
     updateUser: builder.mutation({
       query: (userData) => ({
         url: "/users/update",
@@ -73,6 +79,29 @@ export const apiSlice = createApi({
     getUserData: builder.query({
       query: () => "/users/profile",
     }),
+    getWalletBalance: builder.query({
+      query: () => "wallat/balance",
+    }),
+    topUpPayment: builder.mutation({
+      query: (amount) => ({
+        url: "/payment/topup",
+        method: "POST",
+        body: amount,
+      }),
+    }),
+    sendOrderId: builder.mutation({
+      query: (order_id) => ({
+        url: "/payment/success",
+        method: "POST",
+        body: order_id,
+      }),
+    }),
+    paymentHistory: builder.query({
+      query: () => "/payment",
+    }),
+    transactionHistory: builder.query({
+      query: () => "/wallat",
+    }),
   }),
 });
 
@@ -84,7 +113,14 @@ export const {
   useUpdateCropMutation,
   useRemoveCropMutation,
   usePublishCropMutation,
+  useCropsCountQuery,
+  usePublishedCropsQuery,
   useFetchProfileQuery,
   useUpdateUserMutation,
   useGetUserDataQuery,
+  useGetWalletBalanceQuery,
+  useTopUpPaymentMutation,
+  useSendOrderIdMutation,
+  usePaymentHistoryQuery,
+  useTransactionHistoryQuery,
 } = apiSlice;

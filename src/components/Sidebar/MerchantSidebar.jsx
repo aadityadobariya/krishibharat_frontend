@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import {
   FiBarChart2,
@@ -65,22 +65,22 @@ const MerchantSidebar = () => {
               <FiHome className="mr-2" /> Dashboard
             </Link>
             <Link
-              to="/bids" // Updated to point to /bid
+              to="/bids"
               className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
             >
               <FiBarChart2 className="mr-2" /> Bids
             </Link>
             <Link
-              to="/bought-crops" // Example for All Crops
+              to="/bought-crops"
               className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
             >
               <FiShoppingCart className="mr-2" /> All Crops
             </Link>
             <Link
-              to="/wallet" // Example for Wallet
+              to="/transaction"
               className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
             >
-              <FiDollarSign className="mr-2" /> Wallet
+              <FiDollarSign className="mr-2" /> Transaction
             </Link>
           </nav>
         </div>
