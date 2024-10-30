@@ -74,10 +74,9 @@ const FarmerDashboard = () => {
                 ? "Loading..."
                 : isError
                   ? "Error loading user data."
-                  : `Welcome, ${
-                      userData.fname.charAt(0).toUpperCase() +
-                      userData.fname.slice(1)
-                    }`}
+                  : `Welcome, ${userData.fname.charAt(0).toUpperCase() +
+                  userData.fname.slice(1)
+                  }`}
             </h1>
             <div className="flex items-center">
               <div
