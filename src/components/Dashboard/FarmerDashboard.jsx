@@ -10,8 +10,10 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
-import { useGetUserDataQuery } from "../../features/apiSlice.js";
-import { useCropsCountQuery } from "../../features/apiSlice.js";
+import {
+  useCropsCountQuery,
+  useGetUserDataQuery,
+} from "../../features/apiSlice.js";
 import FarmerSidebar from "../Sidebar/FarmerSidebar.jsx";
 
 ChartJS.register(
@@ -20,7 +22,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 );
 
 const FarmerDashboard = () => {
@@ -30,6 +32,8 @@ const FarmerDashboard = () => {
     isLoading: cropsCountLoading,
     isError: cropsCountError,
   } = useCropsCountQuery();
+  console.log(cropsCountData);
+
   const navigate = useNavigate();
   const data = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
@@ -73,9 +77,10 @@ const FarmerDashboard = () => {
               {isLoading
                 ? "Loading..."
                 : isError
-                  ? "Error loading user data."
-                  : `Welcome, ${userData.fname.charAt(0).toUpperCase() +
-                  userData.fname.slice(1)
+                ? "Error loading user data."
+                : `Welcome, ${
+                    userData.fname.charAt(0).toUpperCase() +
+                    userData.fname.slice(1)
                   }`}
             </h1>
             <div className="flex items-center">
@@ -106,8 +111,8 @@ const FarmerDashboard = () => {
                   {cropsCountLoading
                     ? "Loading..."
                     : cropsCountError
-                      ? "Error loading crops data."
-                      : cropsCountData?.totalCrops || 0}
+                    ? "Error loading crops data."
+                    : cropsCountData?.totalCrops || 0}
                 </p>
               </div>
               <div className="bg-[#4a7c59] p-2 rounded-full text-white">
@@ -123,8 +128,8 @@ const FarmerDashboard = () => {
                   {cropsCountLoading
                     ? "Loading..."
                     : cropsCountError
-                      ? "Error loading crops data."
-                      : cropsCountData?.soldCrops || 0}
+                    ? "Error loading crops data."
+                    : cropsCountData?.soldCrops || 0}
                 </p>
               </div>
               <div className="bg-[#4a7c59] p-2 rounded-full text-white">

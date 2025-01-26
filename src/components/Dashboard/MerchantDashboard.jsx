@@ -12,9 +12,9 @@ import { useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
 import {
+  useCropsCountQuery,
   useFetchCropsQuery,
   useGetUserDataQuery,
-  useCropsCountQuery,
 } from "../../features/apiSlice.js";
 import MerchantSidebar from "../Sidebar/MerchantSidebar.jsx";
 
@@ -24,7 +24,7 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 );
 
 const ContractModal = ({ isOpen, onClose, onConfirm }) => {
@@ -129,11 +129,11 @@ const MerchantDashboard = () => {
               {isLoadingData
                 ? "Loading..."
                 : isError
-                  ? "Error loading user data."
-                  : `Welcome, ${
-                      userData.fname.charAt(0).toUpperCase() +
-                      userData.fname.slice(1)
-                    }`}
+                ? "Error loading user data."
+                : `Welcome, ${
+                    userData.fname.charAt(0).toUpperCase() +
+                    userData.fname.slice(1)
+                  }`}
             </h1>
             <div className="flex items-center">
               <div
@@ -159,11 +159,7 @@ const MerchantDashboard = () => {
                 Total Crops
               </h3>
               <p className="text-2xl font-semibold">
-                {cropsCountLoading
-                  ? "Loading..."
-                  : cropsCountError
-                    ? "Error loading crops data."
-                    : cropsCountData?.totalCrops || 0}
+                {cropsCountData?.totalCrops || "0"}
               </p>
             </div>
             <div className="bg-[#4a7c59] p-2 rounded-full text-white">
@@ -174,11 +170,7 @@ const MerchantDashboard = () => {
             <div>
               <h3 className="text-lg font-medium text-[#4a7c59]">Sold Crops</h3>
               <p className="text-2xl font-semibold">
-                {cropsCountLoading
-                  ? "Loading..."
-                  : cropsCountError
-                    ? "Error loading crops data."
-                    : cropsCountData?.soldCrops || 0}
+                {cropsCountData?.soldCrops || 0}
               </p>
             </div>
             <div className="bg-[#4a7c59] p-2 rounded-full text-white">
