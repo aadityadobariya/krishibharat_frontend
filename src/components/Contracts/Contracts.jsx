@@ -2,10 +2,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  useGetCropByIdQuery,
-  useGetUserDataQuery,
-} from "../../features/apiSlice";
+import { useGetUserDataQuery } from "../../features/apiSlice";
 import { useGetContractsQuery } from "../../features/apiSlice.js";
 import FarmerSidebar from "../Sidebar/FarmerSidebar";
 
@@ -49,10 +46,11 @@ const Contracts = () => {
   const navigate = useNavigate();
   const { data: userData, isLoadingData, isError } = useGetUserDataQuery();
   const { data: contracts, error, isLoading } = useGetContractsQuery();
-  const { data: cropsData } = useGetCropByIdQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
   console.log(contracts);
+
+  console.log(userData);
 
   const userType = Cookies.get("user_type");
 
@@ -134,13 +132,10 @@ const Contracts = () => {
                 {contracts.map((contract) => (
                   <tr key={contract.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {contract.name}
+                      {contract.crop_name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {contract.bag}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {contract.qty}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {contract.sold_price}

@@ -2,70 +2,56 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGetUserDataQuery } from "../features/apiSlice";
-import { useFetchCropsQuery } from "../features/apiSlice.js";
+import {
+  useFetchCropsQuery,
+  useGetContractsQuery,
+  useGetUserDataQuery,
+  useUpdateContractsMutation,
+} from "../features/apiSlice";
 import FarmerSidebar from "./Sidebar/FarmerSidebar";
 import MerchantSidebar from "./Sidebar/MerchantSidebar";
-
-const ContractModal = ({ isOpen, onClose, onConfirm }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-md max-w-[520px] pl-3 w-full">
-        <iframe
-          src="/Crop_Purchase_Contract.pdf"
-          width={"500px"}
-          height={"500px"}
-          className="mb-5"
-        ></iframe>
-        <h2 className="text-xl font-semibold mb-4">
-          Do you want to sign the contract?
-        </h2>
-        <div className="flex justify-end space-x-4">
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
-          <button
-            className="bg-[#4a7c59] text-white px-4 py-2 rounded hover:bg-[#3b634a]"
-            onClick={onConfirm}
-          >
-            Sign
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const BoughtCrops = () => {
   const navigate = useNavigate();
-  const {
-    data: userData,
-    isLoadingData,
-    isError,
-    refetch,
-  } = useGetUserDataQuery();
+  const { data: userData, isLoadingData, isError } = useGetUserDataQuery();
   const { data: crops = [], error, isLoading } = useFetchCropsQuery();
+  const [updateContract] = useUpdateContractsMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
+  const { data: contracts, refetch } = useGetContractsQuery();
 
   useEffect(() => {
     refetch();
   }, []);
 
   const userType = Cookies.get("user_type");
+  console.log(crops);
 
   const handleSignClick = (crop) => {
     setSelectedCrop(crop);
     setIsModalOpen(true);
   };
 
-  const handleConfirm = () => {
-    console.log(`Signed contract for: ${selectedCrop.name}`);
+  const handleConfirm = async () => {
+    if (selectedCrop) {
+      try {
+        await updateContract({ id: selectedCrop.id, status: 1 }).unwrap();
+        console.log(`Signed contract for: ${selectedCrop.name}`);
+      } catch (error) {
+        console.error("Error updating contract:", error);
+      }
+    }
+    setIsModalOpen(false);
+  };
+
+  const handleReject = async () => {
+    if (selectedCrop) {
+      try {
+        await updateContract({ id: selectedCrop.id, status: 2 }).unwrap();
+        console.log(`Rejected contract for: ${selectedCrop.name}`);
+      } catch (error) {
+        console.error("Error updating contract:", error);
+      }
+    }
     setIsModalOpen(false);
   };
 
@@ -81,7 +67,6 @@ const BoughtCrops = () => {
     <div className="flex bg-gray-100">
       {userType === "merchant" ? <MerchantSidebar /> : <FarmerSidebar />}
       <div className="flex-grow bg-gray-50">
-        {/* Header */}
         <header className="bg-white shadow-md z-10 sticky top-0 w-full">
           <div className="px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <h1 className="text-lg sm:text-3xl font-bold text-gray-800">
@@ -111,7 +96,6 @@ const BoughtCrops = () => {
           </div>
         </header>
 
-        {/* Crops List */}
         <div className="p-6">
           <h2 className="text-2xl font-semibold mb-4">Crops Bought</h2>
           <div className="bg-white p-6 rounded-lg shadow-md overflow-auto">
@@ -125,36 +109,45 @@ const BoughtCrops = () => {
                     Bag
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Quantity
+                    Sold Price
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    Sold Price
+                    Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider"></th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {crops.map((crop) => (
-                  <tr key={crop.id} className="hover:bg-gray-50">
+                {contracts.map((contract) => (
+                  <tr key={contract.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {crop.name}
+                      {contract.crop_name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {crop.bag}
+                      {contract.bag}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {crop.qty}
+                      {contract.sold_price}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {crop.sold_price}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button
-                        className="bg-[#4a7c59] text-white px-4 py-2 rounded hover:bg-[#3b634a] transition duration-300 ease-in-out"
-                        onClick={() => handleSignClick(crop)}
-                      >
-                        Sign Contract
-                      </button>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      {contract.status == 0 && (
+                        <button
+                          className="bg-[#4a7c59] text-white px-4 py-2 rounded hover:bg-[#3b634a] transition duration-300 ease-in-out"
+                          onClick={() => handleSignClick(contract)}
+                        >
+                          Sign Contract
+                        </button>
+                      )}
+                      {contract.status == 1 && (
+                        <p className="bg-[#4a7c59] w-32 text-center text-white px-4 py-2 rounded-full transition duration-300 ease-in-out">
+                          Signed
+                        </p>
+                      )}
+                      {contract.status == 2 && (
+                        <p className="bg-[#FF0000] w-32 text-center text-white px-4 py-2 rounded-full transition duration-300 ease-in-out">
+                          Rejected
+                        </p>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -166,7 +159,42 @@ const BoughtCrops = () => {
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             onConfirm={handleConfirm}
+            onReject={handleReject}
           />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ContractModal = ({ isOpen, onClose, onConfirm, onReject }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white p-6 rounded-lg shadow-md max-w-[520px] pl-3 w-full">
+        <iframe
+          src="/Crop_Purchase_Contract.pdf"
+          width={"500px"}
+          height={"500px"}
+          className="mb-5"
+        ></iframe>
+        <h2 className="text-xl font-semibold mb-4">
+          Do you want to sign the contract?
+        </h2>
+        <div className="flex justify-end space-x-4">
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            onClick={onReject}
+          >
+            Reject
+          </button>
+          <button
+            className="bg-[#4a7c59] text-white px-4 py-2 rounded hover:bg-[#3b634a]"
+            onClick={onConfirm}
+          >
+            Sign
+          </button>
         </div>
       </div>
     </div>

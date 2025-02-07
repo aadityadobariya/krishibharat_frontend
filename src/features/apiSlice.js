@@ -36,9 +36,6 @@ export const apiSlice = createApi({
     fetchCrops: builder.query({
       query: () => "/crops/",
     }),
-    getCropById: builder.query({
-      query: (id) => `/crops/getcropById/${id}`,
-    }),
     addCropDetails: builder.mutation({
       query: (cropDetails) => ({
         url: "/crops/",
@@ -101,6 +98,13 @@ export const apiSlice = createApi({
         body: order_id,
       }),
     }),
+    updateContracts: builder.mutation({
+      query: ({ id, status }) => ({
+        url: "contracts/updateContract",
+        method: "POST",
+        body: { id, status },
+      }),
+    }),
     paymentHistory: builder.query({
       query: () => "/payment",
     }),
@@ -117,7 +121,6 @@ export const {
   useRegisterMutation,
   useLoginMutation,
   useFetchCropsQuery,
-  useGetCropByIdQuery,
   useAddCropDetailsMutation,
   useUpdateCropMutation,
   useRemoveCropMutation,
@@ -133,4 +136,5 @@ export const {
   usePaymentHistoryQuery,
   useTransactionHistoryQuery,
   useGetContractsQuery,
+  useUpdateContractsMutation,
 } = apiSlice;
