@@ -301,7 +301,7 @@ const CropManagement = () => {
                     htmlFor="bag"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Bag in Kg
+                    Bag (in kg){" "}
                   </label>
                   <input
                     id="bag"
@@ -331,7 +331,7 @@ const CropManagement = () => {
                     htmlFor="basePrice"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Base Price
+                    Base Price (per bag)
                   </label>
                   <input
                     id="basePrice"
