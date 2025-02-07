@@ -14,16 +14,12 @@ import FarmerSidebar from "./Sidebar/FarmerSidebar";
 import MerchantSidebar from "./Sidebar/MerchantSidebar";
 
 const CropManagement = () => {
-  const {
-    data: userData,
-    isLoadingData,
-    isError,
-    refetch,
-  } = useGetUserDataQuery();
+  const { data: userData, isLoadingData, isError } = useGetUserDataQuery();
   const {
     data: crops = [],
     error: fetchError,
     isLoading: fetchingCrops,
+    refetch,
   } = useFetchCropsQuery();
   const [addCropDetails, { isLoading: addingDetails, error: addError }] =
     useAddCropDetailsMutation();
@@ -33,6 +29,8 @@ const CropManagement = () => {
     useRemoveCropMutation();
   const [publishCrop, { isLoading: publishingCrop, error: publishError }] =
     usePublishCropMutation();
+
+  console.log(crops);
 
   const [currentCropId, setCurrentCropId] = useState(null);
   const [name, setName] = useState("");
@@ -68,7 +66,6 @@ const CropManagement = () => {
       qty: parseInt(quantity, 10),
       base_price: parseFloat(basePrice),
       trigger_price: parseFloat(triggerPrice),
-      created_at: new Date(datetime).toISOString(),
       seller_id: sellerId,
     };
 
@@ -78,7 +75,6 @@ const CropManagement = () => {
       !quantity ||
       !basePrice ||
       !triggerPrice ||
-      !datetime ||
       !sellerId
     ) {
       alert("All fields are required.");
@@ -186,9 +182,9 @@ const CropManagement = () => {
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider hidden lg:table-cell">
                     Trigger Price
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider hidden lg:table-cell">
+                  {/* <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider hidden lg:table-cell">
                     Date
-                  </th>
+                  </th> */}
                   <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                     Actions
                   </th>
@@ -212,9 +208,9 @@ const CropManagement = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
                       {crop.trigger_price}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
+                    {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
                       {new Date(crop.created_at).toLocaleString()}
-                    </td>
+                    </td> */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex flex-row space-x-2">
                       <button
                         onClick={() => handleView(crop)}
@@ -360,7 +356,7 @@ const CropManagement = () => {
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                   />
                 </div>
-                <div className="mb-4">
+                {/* <div className="mb-4">
                   <label
                     htmlFor="datetime"
                     className="block text-sm font-medium text-gray-700"
@@ -374,7 +370,7 @@ const CropManagement = () => {
                     onChange={(e) => setDatetime(e.target.value)}
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                   />
-                </div>
+                </div> */}
                 <div className="flex justify-end space-x-2">
                   <button
                     onClick={handleSubmit}
