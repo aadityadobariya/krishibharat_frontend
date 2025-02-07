@@ -301,7 +301,7 @@ const CropManagement = () => {
                     htmlFor="bag"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Bag
+                    Bag in Kg
                   </label>
                   <input
                     id="bag"
