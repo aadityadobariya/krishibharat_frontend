@@ -6,7 +6,6 @@ import {
   FiHome,
   FiLogOut,
   FiMenu,
-  FiPackage,
   FiShoppingCart,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
@@ -84,12 +83,12 @@ const MerchantSidebar = () => {
             >
               <FiDollarSign className="mr-2" /> Transaction
             </Link>
-            <Link
+            {/* <Link
               to="/contracts"
               className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
             >
               <FiPackage className="mr-2" /> Contracts
-            </Link>
+            </Link> */}
             <Link
               to="/login"
               className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
