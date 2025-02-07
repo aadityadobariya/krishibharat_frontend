@@ -1,5 +1,12 @@
+import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
-import { FiBarChart2, FiDollarSign, FiHome, FiMenu } from "react-icons/fi";
+import {
+  FiBarChart2,
+  FiDollarSign,
+  FiHome,
+  FiLogOut,
+  FiMenu,
+} from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 const FarmerSidebar = () => {
@@ -74,6 +81,15 @@ const FarmerSidebar = () => {
               className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
             >
               <FiDollarSign className="mr-2" /> Transaction
+            </Link>
+            <Link
+              to="/login"
+              className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
+              onClick={() => {
+                Cookies.remove("token");
+              }}
+            >
+              <FiLogOut className="mr-2" /> Logout
             </Link>
           </nav>
         </div>

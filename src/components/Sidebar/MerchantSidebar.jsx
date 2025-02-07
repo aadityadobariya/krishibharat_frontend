@@ -1,8 +1,10 @@
+import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
 import {
   FiBarChart2,
   FiDollarSign,
   FiHome,
+  FiLogOut,
   FiMenu,
   FiPackage,
   FiShoppingCart,
@@ -87,6 +89,15 @@ const MerchantSidebar = () => {
               className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
             >
               <FiPackage className="mr-2" /> Contracts
+            </Link>
+            <Link
+              to="/login"
+              className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
+              onClick={() => {
+                Cookies.remove("token");
+              }}
+            >
+              <FiLogOut className="mr-2" /> Logout
             </Link>
           </nav>
         </div>
