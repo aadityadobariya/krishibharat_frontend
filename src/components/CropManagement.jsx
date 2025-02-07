@@ -1,6 +1,6 @@
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   useAddCropDetailsMutation,
@@ -24,7 +24,6 @@ const CropManagement = () => {
     data: crops = [],
     error: fetchError,
     isLoading: fetchingCrops,
-    refetch,
   } = useFetchCropsQuery();
   const [addCropDetails, { isLoading: addingDetails, error: addError }] =
     useAddCropDetailsMutation();
@@ -45,10 +44,6 @@ const CropManagement = () => {
   const [sellerId, setSellerId] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [viewCrop, setViewCrop] = useState(null);
-
-  useEffect(() => {
-    refetch();
-  }, []);
 
   const navigate = useNavigate();
   const userType = Cookies.get("user_type");
