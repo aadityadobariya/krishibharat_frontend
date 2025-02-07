@@ -2,7 +2,9 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "js-cookie";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://platform.krishibharat.tech:8855/api",
+  // baseUrl: "https://platform.krishibharat.site:8855/api",
+  baseUrl:
+    "https://5e25-2401-4900-8815-d21d-909c-f82a-8c06-dcca.ngrok-free.app/api",
   prepareHeaders: (headers) => {
     const token = Cookies.get("token");
     if (token) {
@@ -33,6 +35,9 @@ export const apiSlice = createApi({
     }),
     fetchCrops: builder.query({
       query: () => "/crops/",
+    }),
+    getCropById: builder.query({
+      query: (id) => `/crops/getcropById/${id}`,
     }),
     addCropDetails: builder.mutation({
       query: (cropDetails) => ({
@@ -102,6 +107,9 @@ export const apiSlice = createApi({
     transactionHistory: builder.query({
       query: () => "/wallat",
     }),
+    getContracts: builder.query({
+      query: () => "/contracts",
+    }),
   }),
 });
 
@@ -109,6 +117,7 @@ export const {
   useRegisterMutation,
   useLoginMutation,
   useFetchCropsQuery,
+  useGetCropByIdQuery,
   useAddCropDetailsMutation,
   useUpdateCropMutation,
   useRemoveCropMutation,
@@ -123,4 +132,5 @@ export const {
   useSendOrderIdMutation,
   usePaymentHistoryQuery,
   useTransactionHistoryQuery,
+  useGetContractsQuery,
 } = apiSlice;

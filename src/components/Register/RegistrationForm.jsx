@@ -113,44 +113,48 @@ export default function RegistrationForm() {
 
   const processForm = async (data) => {
     try {
-      const formattedData = {
-        user_info: {
-          user_type: data.registrationType || "",
-          title: data.title || "",
-          fname: data.firstName || "",
-          mname: data.middleName || "",
-          lname: data.lastName || "",
-          gender: data.gender || "",
-          dob: data.dateOfBirth || "",
-          nomini_type: data.relationType || "",
-          nomini_name: data.relationName || "",
-          address: data.residentialAddress || "",
-          pincode: data.pincode || "",
-          state: data.state || "",
-          district: data.district || "",
-          village: data.tehsil || "",
-          lic_no: data.licenceNo || "",
-          created_by: null,
-          created_at: new Date().toISOString(),
-          modified_at: null,
-          completion_status: 1,
-        },
-        bank: {
-          ac_no: data.bankAccNo || "",
-          ac_name: data.accHolderName || "",
-          ifsc: data.ifscCode || "",
-          branch_name: data.branchName || "",
-        },
-        kyc: {
-          doc_type: "Aadhar",
-          created_at: new Date().toISOString(),
-        },
-      };
+      // const formattedData = {
+      //   user_info: {
+      //     user_type: data.registrationType || "",
+      //     title: data.title || "",
+      //     fname: data.firstName || "",
+      //     mname: data.middleName || "",
+      //     lname: data.lastName || "",
+      //     gender: data.gender || "",
+      //     dob: data.dateOfBirth || "",
+      //     nomini_type: data.relationType || "",
+      //     nomini_name: data.relationName || "",
+      //     address: data.residentialAddress || "",
+      //     pincode: data.pincode || "",
+      //     state: data.state || "",
+      //     district: data.district || "",
+      //     village: data.tehsil || "",
+      //     lic_no: data.licenceNo || "",
+      //     created_by: null,
+      //     created_at: new Date().toISOString(),
+      //     modified_at: null,
+      //     completion_status: 1,
+      //   },
+      //   bank: {
+      //     ac_no: data.bankAccNo || "",
+      //     ac_name: data.accHolderName || "",
+      //     ifsc: data.ifscCode || "",
+      //     branch_name: data.branchName || "",
+      //   },
+      //   kyc: {
+      //     doc_type: "Aadhar",
+      //     created_at: new Date().toISOString(),
+      //   },
+      // };
 
-      console.log("Sending data to API:", formattedData);
-      const response = await updateUser(formattedData).unwrap();
-      console.log("Update successful:", response);
-      navigate("/farmer-dashboard"); // Adjust the path as needed
+      // console.log("Sending data to API:", formattedData);
+      console.log([...data.kycImage, ...data.copyOfPassbook]);
+
+      console.log(data);
+
+      // const response = await updateUser(formattedData).unwrap();
+      // console.log("Update successful:", response);
+      // navigate("/farmer-dashboard"); // Adjust the path as needed
     } catch (error) {
       console.error("Update failed:", error);
       if (error.data) {

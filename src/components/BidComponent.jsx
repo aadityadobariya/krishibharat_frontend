@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import io from "socket.io-client";
-import { useNavigate } from "react-router-dom";
-import MerchantSidebar from "./Sidebar/MerchantSidebar";
-import FarmerSidebar from "./Sidebar/FarmerSidebar";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import io from "socket.io-client";
 import { useGetUserDataQuery } from "../features/apiSlice";
+import FarmerSidebar from "./Sidebar/FarmerSidebar";
+import MerchantSidebar from "./Sidebar/MerchantSidebar";
 
 const BidComponent = () => {
   const { data: userData, isLoading, isError } = useGetUserDataQuery();
@@ -22,11 +22,15 @@ const BidComponent = () => {
 
   useEffect(() => {
     const token = Cookies.get("token");
-    const newSocket = io("https://platform.krishibharat.tech:8855", {
-      extraHeaders: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    // const newSocket = io("https://platform.krishibharat.site:8855", {
+    const newSocket = io(
+      "https://5e25-2401-4900-8815-d21d-909c-f82a-8c06-dcca.ngrok-free.app/",
+      {
+        extraHeaders: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     setSocket(newSocket);
 
@@ -45,8 +49,8 @@ const BidComponent = () => {
     newSocket.on("bid_updated", (updatedCrop) => {
       setCrops((prevCrops) =>
         prevCrops.map((crop) =>
-          crop.id === updatedCrop.id ? updatedCrop : crop,
-        ),
+          crop.id === updatedCrop.id ? updatedCrop : crop
+        )
       );
     });
 
@@ -95,7 +99,7 @@ const BidComponent = () => {
     if (!selectedCrop || !selectedCrop.id) {
       console.error(
         "Error placing bid: 'selectedCrop' or 'selectedCrop.id' is not defined.",
-        selectedCrop,
+        selectedCrop
       );
       setError("Please select a crop before placing a bid.");
       return;
@@ -107,18 +111,22 @@ const BidComponent = () => {
       return;
     }
 
-    fetch("https://platform.krishibharat.tech:8855/api/crops/place_bid", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${Cookies.get("token")}`,
-      },
-      body: JSON.stringify({
-        id: selectedCrop.id,
-        buyer_id: 14,
-        sold_price: bidValue,
-      }),
-    })
+    // fetch("https://platform.krishibharat.site:8855/api/crops/place_bid", {
+    fetch(
+      "https://5e25-2401-4900-8815-d21d-909c-f82a-8c06-dcca.ngrok-free.app/api/crops/place_bid",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+        body: JSON.stringify({
+          id: selectedCrop.id,
+          buyer_id: 14,
+          sold_price: bidValue,
+        }),
+      }
+    )
       .then(async (response) => {
         if (!response.ok) {
           const errorText = await response.text();
@@ -143,8 +151,8 @@ const BidComponent = () => {
           prevCrops.map((crop) =>
             crop.id === selectedCrop.id
               ? { ...crop, sold_price: bidValue, is_sold: true }
-              : crop,
-          ),
+              : crop
+          )
         );
         closeModal();
       })
@@ -167,9 +175,10 @@ const BidComponent = () => {
               {isLoading
                 ? "Loading..."
                 : isError
-                  ? "Error loading user data."
-                  : `Welcome, ${userData.fname.charAt(0).toUpperCase() +
-                  userData.fname.slice(1)
+                ? "Error loading user data."
+                : `Welcome, ${
+                    userData.fname.charAt(0).toUpperCase() +
+                    userData.fname.slice(1)
                   }`}
             </h1>
             <div className="flex items-center">
@@ -349,4 +358,3 @@ const BidComponent = () => {
 };
 
 export default BidComponent;
-

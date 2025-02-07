@@ -181,6 +181,7 @@ const StepThree = () => {
             <input
               type="file"
               id="copyOfPassbook"
+              {...register("copyOfPassbook")}
               onChange={(e) => (e, "copyOfPassbook")}
             />
             {errors.copyOfPassbook?.message && (
