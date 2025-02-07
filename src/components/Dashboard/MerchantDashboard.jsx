@@ -34,7 +34,7 @@ const ContractModal = ({ isOpen, onClose, onConfirm }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg shadow-md max-w-[520px] pl-3 w-full">
         <iframe
-          src="/document.pdf"
+          src="/Crop_Purchase_Contract.pdf"
           width={"500px"}
           height={"500px"}
           className="mb-5"
@@ -259,12 +259,12 @@ const MerchantDashboard = () => {
                       {crop.sold_price}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button
+                      {/* <button
                         className="bg-[#4a7c59] text-white px-4 py-2 rounded hover:bg-[#3b634a] transition duration-300 ease-in-out"
                         onClick={() => handleSignClick(crop)}
                       >
                         Sign Contract
-                      </button>
+                      </button> */}
                     </td>
                   </tr>
                 ))}

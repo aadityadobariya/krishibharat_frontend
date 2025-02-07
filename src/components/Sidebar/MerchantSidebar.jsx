@@ -1,13 +1,13 @@
-import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import {
   FiBarChart2,
   FiDollarSign,
   FiHome,
   FiMenu,
+  FiPackage,
   FiShoppingCart,
-  FiUsers,
 } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 const MerchantSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -81,6 +81,12 @@ const MerchantSidebar = () => {
               className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
             >
               <FiDollarSign className="mr-2" /> Transaction
+            </Link>
+            <Link
+              to="/contracts"
+              className="flex items-center py-2 px-6 text-md font-medium hover:bg-[#3b634a]"
+            >
+              <FiPackage className="mr-2" /> Contracts
             </Link>
           </nav>
         </div>

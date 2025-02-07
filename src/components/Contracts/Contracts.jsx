@@ -18,7 +18,7 @@ const ContractModal = ({ isOpen, onClose, onConfirm }) => {
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg shadow-md max-w-[520px] pl-3 w-full">
         <iframe
-          src="/document.pdf"
+          src="/Crop_Purchase_Contract.pdf"
           width={"500px"}
           height={"500px"}
           className="mb-5"

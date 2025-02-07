@@ -1,11 +1,11 @@
-import { useState } from "react";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import { useFetchCropsQuery } from "../features/apiSlice.js";
-import { useGetUserDataQuery } from "../features/apiSlice";
-import MerchantSidebar from "./Sidebar/MerchantSidebar";
-import FarmerSidebar from "./Sidebar/FarmerSidebar";
 import Cookies from "js-cookie";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGetUserDataQuery } from "../features/apiSlice";
+import { useFetchCropsQuery } from "../features/apiSlice.js";
+import FarmerSidebar from "./Sidebar/FarmerSidebar";
+import MerchantSidebar from "./Sidebar/MerchantSidebar";
 
 const ContractModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
@@ -14,7 +14,7 @@ const ContractModal = ({ isOpen, onClose, onConfirm }) => {
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg shadow-md max-w-[520px] pl-3 w-full">
         <iframe
-          src="/document.pdf"
+          src="/Crop_Purchase_Contract.pdf"
           width={"500px"}
           height={"500px"}
           className="mb-5"
@@ -79,11 +79,11 @@ const BoughtCrops = () => {
               {isLoadingData
                 ? "Loading..."
                 : isError
-                  ? "Error loading user data."
-                  : `Welcome, ${
-                      userData.fname.charAt(0).toUpperCase() +
-                      userData.fname.slice(1)
-                    }`}
+                ? "Error loading user data."
+                : `Welcome, ${
+                    userData.fname.charAt(0).toUpperCase() +
+                    userData.fname.slice(1)
+                  }`}
             </h1>
             <div className="flex items-center">
               <div
