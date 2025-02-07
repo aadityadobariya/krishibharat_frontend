@@ -1,20 +1,25 @@
-import { useState } from "react";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   useAddCropDetailsMutation,
   useFetchCropsQuery,
+  useGetUserDataQuery,
   usePublishCropMutation,
   useRemoveCropMutation,
   useUpdateCropMutation,
 } from "../features/apiSlice";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
-import MerchantSidebar from "./Sidebar/MerchantSidebar";
 import FarmerSidebar from "./Sidebar/FarmerSidebar";
-import { useGetUserDataQuery } from "../features/apiSlice";
+import MerchantSidebar from "./Sidebar/MerchantSidebar";
 
 const CropManagement = () => {
-  const { data: userData, isLoadingData, isError } = useGetUserDataQuery();
+  const {
+    data: userData,
+    isLoadingData,
+    isError,
+    refetch,
+  } = useGetUserDataQuery();
   const {
     data: crops = [],
     error: fetchError,
@@ -40,6 +45,10 @@ const CropManagement = () => {
   const [sellerId, setSellerId] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [viewCrop, setViewCrop] = useState(null);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const navigate = useNavigate();
   const userType = Cookies.get("user_type");
@@ -139,11 +148,11 @@ const CropManagement = () => {
               {isLoadingData
                 ? "Loading..."
                 : isError
-                  ? "Error loading user data."
-                  : `Welcome, ${
-                      userData.fname.charAt(0).toUpperCase() +
-                      userData.fname.slice(1)
-                    }`}
+                ? "Error loading user data."
+                : `Welcome, ${
+                    userData.fname.charAt(0).toUpperCase() +
+                    userData.fname.slice(1)
+                  }`}
             </h1>
             <div className="flex items-center">
               <div

@@ -8,7 +8,7 @@ import FarmerSidebar from "./Sidebar/FarmerSidebar";
 import MerchantSidebar from "./Sidebar/MerchantSidebar";
 
 const BidComponent = () => {
-  const { data: userData, isLoading, isError } = useGetUserDataQuery();
+  const { data: userData, isLoading, isError, refetch } = useGetUserDataQuery();
   const [socket, setSocket] = useState(null);
   const [crops, setCrops] = useState([]);
   const [selectedState, setSelectedState] = useState("");
@@ -17,6 +17,10 @@ const BidComponent = () => {
   const [selectedCrop, setSelectedCrop] = useState({ id: null, base_price: 0 });
   const [bidAmount, setBidAmount] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const userType = Cookies.get("user_type");
 

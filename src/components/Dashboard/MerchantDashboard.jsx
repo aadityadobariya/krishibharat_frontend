@@ -8,7 +8,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
 import {
@@ -67,11 +67,20 @@ const MerchantDashboard = () => {
     isLoading: cropsCountLoading,
     isError: cropsCountError,
   } = useCropsCountQuery();
-  const { data: userData, isLoadingData, isError } = useGetUserDataQuery();
+  const {
+    data: userData,
+    isLoadingData,
+    isError,
+    refetch,
+  } = useGetUserDataQuery();
   const navigate = useNavigate();
   const { data: crops = [], error, isLoading } = useFetchCropsQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const handleSignClick = (crop) => {
     setSelectedCrop(crop);

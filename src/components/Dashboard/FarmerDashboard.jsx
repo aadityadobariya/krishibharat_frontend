@@ -8,6 +8,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import { useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import { useNavigate } from "react-router-dom";
 import {
@@ -26,13 +27,17 @@ ChartJS.register(
 );
 
 const FarmerDashboard = () => {
-  const { data: userData, isLoading, isError } = useGetUserDataQuery();
+  const { data: userData, isLoading, isError, refetch } = useGetUserDataQuery();
   const {
     data: cropsCountData,
     isLoading: cropsCountLoading,
     isError: cropsCountError,
   } = useCropsCountQuery();
   console.log(cropsCountData);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const navigate = useNavigate();
   const data = {

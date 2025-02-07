@@ -1,6 +1,6 @@
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import Cookies from "js-cookie";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetUserDataQuery } from "../features/apiSlice";
 import { useFetchCropsQuery } from "../features/apiSlice.js";
@@ -43,10 +43,19 @@ const ContractModal = ({ isOpen, onClose, onConfirm }) => {
 
 const BoughtCrops = () => {
   const navigate = useNavigate();
-  const { data: userData, isLoadingData, isError } = useGetUserDataQuery();
+  const {
+    data: userData,
+    isLoadingData,
+    isError,
+    refetch,
+  } = useGetUserDataQuery();
   const { data: crops = [], error, isLoading } = useFetchCropsQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const userType = Cookies.get("user_type");
 
