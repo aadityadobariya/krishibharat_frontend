@@ -22,15 +22,14 @@ const BidComponent = () => {
 
   useEffect(() => {
     const token = Cookies.get("token");
-    // const newSocket = io("https://platform.krishibharat.site:8855", {
-    const newSocket = io(
-      "https://5e25-2401-4900-8815-d21d-909c-f82a-8c06-dcca.ngrok-free.app/",
-      {
-        extraHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const newSocket = io("https://platform.krishibharat.site:8855", {
+      // const newSocket = io(
+      //   "https://5e25-2401-4900-8815-d21d-909c-f82a-8c06-dcca.ngrok-free.app/",
+      //   {
+      extraHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     setSocket(newSocket);
 
@@ -111,22 +110,21 @@ const BidComponent = () => {
       return;
     }
 
-    // fetch("https://platform.krishibharat.site:8855/api/crops/place_bid", {
-    fetch(
-      "https://5e25-2401-4900-8815-d21d-909c-f82a-8c06-dcca.ngrok-free.app/api/crops/place_bid",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
-        body: JSON.stringify({
-          id: selectedCrop.id,
-          buyer_id: 14,
-          sold_price: bidValue,
-        }),
-      }
-    )
+    fetch("https://platform.krishibharat.site:8855/api/crops/place_bid", {
+      // fetch(
+      //   "https://5e25-2401-4900-8815-d21d-909c-f82a-8c06-dcca.ngrok-free.app/api/crops/place_bid",
+      //   {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+      body: JSON.stringify({
+        id: selectedCrop.id,
+        buyer_id: 14,
+        sold_price: bidValue,
+      }),
+    })
       .then(async (response) => {
         if (!response.ok) {
           const errorText = await response.text();
