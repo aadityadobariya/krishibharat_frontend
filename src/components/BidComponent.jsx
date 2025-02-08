@@ -272,9 +272,9 @@ const BidComponent = () => {
                       <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                         Current Bid Price
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                      {/* <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                         Status
-                      </th>
+                      </th> */}
                       <th className="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                         Action
                       </th>
@@ -295,9 +295,9 @@ const BidComponent = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {crop.sold_price ? crop.sold_price : "Not Sold"}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {crop.is_sold ? "Sold" : "Available"}
-                        </td>
+                        </td> */}
                         <td className="px-6 py-4 whitespace-nowrap">
                           {!crop.is_sold && (
                             <button
