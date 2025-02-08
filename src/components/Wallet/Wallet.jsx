@@ -1,18 +1,19 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import Cookies from "js-cookie";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 import {
   useGetUserDataQuery,
   useGetWalletBalanceQuery,
-  useTopUpPaymentMutation,
-  useSendOrderIdMutation,
   usePaymentHistoryQuery,
+  useSendOrderIdMutation,
+  useTopUpPaymentMutation,
 } from "../../features/apiSlice";
-import MerchantSidebar from "../Sidebar/MerchantSidebar";
 import FarmerSidebar from "../Sidebar/FarmerSidebar";
-import { z } from "zod";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Cookies from "js-cookie";
+import MerchantSidebar from "../Sidebar/MerchantSidebar";
 
 const WalletComponent = () => {
   const {
@@ -50,6 +51,10 @@ const WalletComponent = () => {
       .refine((val) => val > 0, { message: "Amount must be greater than 0" }),
   });
 
+  useEffect(() => {
+    refetch();
+  });
+
   const {
     control,
     handleSubmit,
@@ -67,7 +72,7 @@ const WalletComponent = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       ).unwrap();
 
       if (apiResponse.order_id) {
@@ -87,7 +92,7 @@ const WalletComponent = () => {
                   headers: {
                     Authorization: `Bearer ${token}`,
                   },
-                },
+                }
               ).unwrap();
               console.log("Order ID sent successfully");
               refetch();
@@ -132,8 +137,11 @@ const WalletComponent = () => {
               {userLoading
                 ? "Loading..."
                 : userError
-                  ? "Error loading user data."
-                  : `Welcome, ${userData.fname.charAt(0).toUpperCase() + userData.fname.slice(1)}`}
+                ? "Error loading user data."
+                : `Welcome, ${
+                    userData.fname.charAt(0).toUpperCase() +
+                    userData.fname.slice(1)
+                  }`}
             </h1>
             <div className="flex items-center">
               <div
@@ -162,8 +170,8 @@ const WalletComponent = () => {
                 {walletLoading
                   ? "Loading..."
                   : walletError
-                    ? "Error"
-                    : walletBalance.toFixed(2)}
+                  ? "Error"
+                  : walletBalance.toFixed(2)}
               </span>
             </div>
           </div>
@@ -180,7 +188,9 @@ const WalletComponent = () => {
                 render={({ field }) => (
                   <input
                     type="number"
-                    className={`border border-gray-300 px-4 py-2 rounded w-full focus:ring focus:ring-green-300 appearance-none ${errors.amount ? "border-red-500" : ""}`}
+                    className={`border border-gray-300 px-4 py-2 rounded w-full focus:ring focus:ring-green-300 appearance-none ${
+                      errors.amount ? "border-red-500" : ""
+                    }`}
                     placeholder="Enter amount"
                     {...field}
                     style={{ MozAppearance: "textfield" }}
