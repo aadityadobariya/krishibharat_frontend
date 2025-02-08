@@ -1,6 +1,6 @@
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import Cookies from "js-cookie";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   useAddCropDetailsMutation,
@@ -58,6 +58,10 @@ const CropManagement = () => {
     setShowModal(true);
     setViewCrop(null);
   };
+
+  useEffect(() => {
+    refetch();
+  });
 
   const handleSubmit = async () => {
     const cropData = {
