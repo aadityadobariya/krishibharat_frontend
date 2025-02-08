@@ -17,7 +17,11 @@ const BoughtCrops = () => {
   const [updateContract] = useUpdateContractsMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCrop, setSelectedCrop] = useState(null);
-  const { data: contracts, refetch } = useGetContractsQuery();
+  const {
+    data: contracts,
+    isLoading: isContractLoading,
+    refetch,
+  } = useGetContractsQuery();
 
   useEffect(() => {
     refetch();
